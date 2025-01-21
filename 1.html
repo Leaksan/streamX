@@ -1,0 +1,1246 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StreamX - Contenu Adulte</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #000000;
+            color: white;
+        }
+         .top-nav {
+            position: fixed;
+            top: 0;
+            right: 0;
+            height: 120px;
+            background-color: #000000;
+            display: flex;
+            flex-direction: column;
+            z-index: 199;
+            padding-left: 60px;
+            width: calc(100% - 60px);
+            border-bottom: none;
+        }
+
+        .top-bar {
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            padding: 0;
+            height: 60px;
+            position: relative;
+        }
+
+        .site-logo {
+            color: #E50914;
+            font-size: 1.6em;
+            font-weight: 700;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-right: 40px;
+            margin-left: -60px;
+        }
+
+        .site-logo svg {
+            width: 24px;
+            height: 24px;
+            fill: #E50914;
+        }
+
+        .search-container {
+            flex: 1;
+            max-width: 500px;
+            position: relative;
+            margin: 0 auto;
+            margin-right: 40px;
+            margin-left: 40px;
+        }
+
+        .search-container input {
+            background-color: #333333;
+            border: none;
+            color: white;
+            padding: 12px 40px 12px 20px;
+            border-radius: 25px;
+            width: 100%;
+            font-size: 1.1em;
+        }
+
+        .search-container svg {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 18px;
+            height: 18px;
+            fill: #999;
+        }
+
+        .horizontal-menu {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            padding: 15px 0;
+            background-color: transparent;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            margin-top: 0;
+        }
+
+        .horizontal-menu a {
+            position: relative;
+            color: #999;
+            text-decoration: none;
+            font-size: 1em;
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+
+        .horizontal-menu a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            left: 0;
+            background-color: #E50914;
+            transition: width 0.3s ease;
+        }
+
+        .horizontal-menu a:hover::after {
+            width: 100%;
+        }
+
+        .horizontal-menu a.active::after {
+            width: 100%;
+        }
+
+        .right-icons {
+            display: flex;
+            gap: 20px;
+            margin-left: auto;
+        }
+
+        .right-icons a {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #999;
+            text-decoration: none;
+            font-size: 0.9em;
+            transition: color 0.3s ease;
+        }
+
+        .right-icons a:hover {
+            color: #E50914;
+        }
+
+        .right-icons svg {
+            width: 20px;
+            height: 20px;
+            fill: currentColor;
+        }
+        footer {
+            background-color: #000000;
+            color: #757575;
+            text-align: center;
+            padding: 1em;
+            margin-top: 50px;
+        }
+        .age-verification {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.95);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            color: white;
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .age-verification button {
+            background-color: #E50914;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            margin: 10px;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 1.1em;
+        }
+        
+        .age-verification button.exit {
+            background-color: #333;
+        }
+        
+        .category-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: rgba(229, 9, 20, 0.8);
+            padding: 5px 10px;
+            border-radius: 3px;
+            font-size: 0.8em;
+        }
+        
+        .movie-info {
+            padding: 10px;
+            background: linear-gradient(0deg, #1f1f1f 0%, rgba(31,31,31,0.8) 100%);
+        }
+        
+        .movie-info h3 {
+            color: white;
+            margin: 0 0 8px 0;
+            font-size: 1em;
+            line-height: 1.4;
+            margin-bottom: 8px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        
+        .movie-meta {
+            display: flex;
+            justify-content: space-between;
+            color: #999;
+            font-size: 0.85em;
+            align-items: center;
+        }
+        
+        .like-ratio {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        
+        /* Couleurs selon le pourcentage avec plus de tolérance */
+        .like-ratio[data-ratio="high"] {
+            color: #39ff14; /* Vert néon pour >= 75% */
+        }
+
+        .like-ratio[data-ratio="good"] {
+            color: #90EE90; /* Vert clair pour >= 55% */
+        }
+
+        .like-ratio[data-ratio="medium"] {
+            color: #FFA500; /* Orange pour >= 35% */
+        }
+
+        .like-ratio[data-ratio="low"] {
+            color: #FF0000; /* Rouge pour < 35% */
+        }
+        
+        .like-ratio svg {
+            width: 14px;
+            height: 14px;
+            fill: currentColor;
+        }
+        
+        .movie-duration, .movie-views {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        
+        /* Style pour la sidebar */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 120px;
+            height: calc(100% - 120px);
+            width: 60px;
+            background-color: #000000;
+            padding: 10px 0;
+            z-index: 200;
+        }
+
+        .nav-links {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .nav-links a {
+            position: relative;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #999;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .nav-icon {
+            width: 24px;
+            height: 24px;
+            fill: currentColor;
+        }
+
+        /* Style pour le texte qui apparaît au survol */
+        .nav-links a span {
+            position: absolute;
+            left: 60px;
+            background: #000;
+            padding: 10px 15px;
+            border-radius: 4px;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        /* Affichage du texte au survol */
+        .nav-links a:hover span {
+            opacity: 1;
+            visibility: visible;
+            left: 70px;
+        }
+
+        /* Style pour l'icône active */
+        .nav-links a.active {
+            color: #E50914;
+        }
+
+        .nav-links a:hover {
+            color: #E50914;
+        }
+
+        /* Suppression du logo dans la sidebar */
+        .sidebar .logo {
+            display: none;
+        }
+
+        /* Ajustement du contenu principal */
+        main {
+            margin-left: 60px;
+            margin-top: 120px;
+            padding: 20px 40px;
+        }
+
+        .top-nav {
+            position: fixed;
+            top: 0;
+            right: 0;
+            height: 120px;
+            background-color: #000000;
+            display: flex;
+            flex-direction: column;
+            z-index: 199;
+            padding-left: 60px;
+            width: calc(100% - 60px);
+            border-bottom: none;
+        }
+
+        .top-bar {
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            padding: 0;
+            height: 60px;
+            position: relative;
+        }
+
+        .site-logo {
+            color: #E50914;
+            font-size: 1.6em;
+            font-weight: 700;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-right: 40px;
+            margin-left: -60px;
+        }
+
+        .site-logo svg {
+            width: 24px;
+            height: 24px;
+            fill: #E50914;
+        }
+
+        .search-container {
+            flex: 1;
+            max-width: 500px;
+            position: relative;
+            margin: 0 auto;
+            margin-right: 40px;
+            margin-left: 40px;
+        }
+
+        .search-container input {
+            background-color: #333333;
+            border: none;
+            color: white;
+            padding: 12px 40px 12px 20px;
+            border-radius: 25px;
+            width: 100%;
+            font-size: 1.1em;
+        }
+
+        .search-container svg {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 18px;
+            height: 18px;
+            fill: #999;
+        }
+
+        .search-container input:focus {
+            background-color: #454545;
+            outline: none;
+        }
+
+        .search-container input:focus + svg {
+            fill: #E50914;
+        }
+
+        /* Menu horizontal */
+        .horizontal-menu {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            padding: 15px 0;
+            background-color: transparent;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            margin-top: 0;
+        }
+
+        .horizontal-menu a {
+            position: relative;
+            color: #999;
+            text-decoration: none;
+            font-size: 1em;
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+
+        .horizontal-menu a:hover {
+            color: #E50914;
+        }
+
+        .horizontal-menu a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            left: 0;
+            background-color: #E50914;
+            transition: width 0.3s ease;
+        }
+
+        .horizontal-menu a:hover::after {
+            width: 100%;
+        }
+
+        .horizontal-menu a.active::after {
+            width: 100%;
+        }
+
+        /* Style pour les icônes de droite */
+        .right-icons {
+            display: flex;
+            gap: 20px;
+            margin-left: auto;
+        }
+
+        .right-icons a {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #999;
+            text-decoration: none;
+            font-size: 0.9em;
+            transition: color 0.3s ease;
+        }
+
+        .right-icons a:hover {
+            color: #E50914;
+        }
+
+        .right-icons svg {
+            width: 20px;
+            height: 20px;
+            fill: currentColor;
+        }
+
+        /* Style pour les cartes de contenu */
+        .movie-card {
+            cursor: pointer;
+        }
+
+        .movie-info {
+            padding: 15px;
+        }
+
+        .movie-info h3 {
+            margin: 0 0 8px 0;
+        }
+
+        .movie-duration {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .movie-views {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        /* Supprimer le logo à gauche s'il existe */
+        .left-logo {
+            display: none;
+        }
+
+        /* Ajuster le contenu principal */
+        main {
+            margin-top: 120px;
+            margin-left: 60px;
+            background-color: #141414;
+            min-height: calc(100vh - 120px);
+            padding: 20px;
+        }
+
+        /* Ajouter après les styles du header */
+        .movies-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 25px;
+            padding: 20px;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        .movie-card {
+            position: relative;
+            border-radius: 12px;
+            overflow: hidden;
+            background: linear-gradient(to bottom, #1f1f1f, #141414);
+            transition: transform 0.3s ease;
+            text-decoration: none;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .movie-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(229, 9, 20, 0.2);
+        }
+
+        .movie-card img {
+            width: 100%;
+            aspect-ratio: 16/9;
+            object-fit: cover;
+        }
+
+        .movie-info {
+            padding: 15px;
+        }
+
+        .movie-info h3 {
+            color: white;
+            margin: 0 0 10px 0;
+            font-size: 1.1em;
+            line-height: 1.4;
+        }
+
+        .movie-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #999;
+            font-size: 0.9em;
+        }
+
+        .like-ratio {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .like-ratio svg {
+            width: 16px;
+            height: 16px;
+            fill: currentColor;
+        }
+
+        .like-ratio[data-ratio="high"] {
+            color: #4CAF50;
+        }
+
+        .like-ratio[data-ratio="good"] {
+            color: #8BC34A;
+        }
+
+        .like-ratio[data-ratio="medium"] {
+            color: #FFC107;
+        }
+
+        .like-ratio[data-ratio="low"] {
+            color: #FF5722;
+        }
+
+        .category-title {
+            color: #E5E5E5;
+            font-size: 1.5em;
+            margin: 40px 20px 20px;
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 40px 0;
+        }
+
+        .pagination a {
+            color: #999;
+            text-decoration: none;
+            padding: 8px 12px;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+
+        .pagination a:hover,
+        .pagination a.active {
+            background-color: #E50914;
+            color: white;
+        }
+
+        /* Ajuster le contenu principal */
+        main {
+            margin-top: 120px;
+            padding: 20px;
+            min-height: calc(100vh - 120px);
+            background-color: #141414;
+        }
+
+        /* Ajouter ces styles */
+        .content-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 25px;
+            padding: 20px;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        .content-card {
+            position: relative;
+            border-radius: 12px;
+            overflow: hidden;
+            background: linear-gradient(to bottom, #1f1f1f, #141414);
+            transition: transform 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .content-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(229, 9, 20, 0.2);
+        }
+
+        /* Style commun pour les miniatures */
+        .thumbnail {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 16/9;
+        }
+
+        .thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Styles pour les badges et overlays */
+        .badge {
+            position: absolute;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.9em;
+            z-index: 2;
+        }
+
+        .duration {
+            bottom: 10px;
+            right: 10px;
+            background: rgba(0, 0, 0, 0.85);
+        }
+
+        .quality {
+            top: 10px;
+            right: 10px;
+            background: linear-gradient(45deg, #E50914, #ff0a16);
+        }
+
+        .type-badge {
+            top: 10px;
+            left: 10px;
+            background: rgba(0, 0, 0, 0.85);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .type-badge svg {
+            width: 14px;
+            height: 14px;
+            fill: currentColor;
+        }
+
+        /* Style pour les informations */
+        .content-info {
+            padding: 15px;
+        }
+
+        .content-info h3 {
+            color: white;
+            margin: 0 0 8px 0;
+            font-size: 1.1em;
+            line-height: 1.4;
+        }
+
+        .meta-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #999;
+            font-size: 0.9em;
+        }
+
+        .stats {
+            display: flex;
+            gap: 15px;
+            color: #999;
+            font-size: 0.9em;
+            margin-top: 8px;
+        }
+
+        .stats span {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .stats svg {
+            width: 14px;
+            height: 14px;
+            fill: currentColor;
+        }
+
+        /* Style spécifique pour les posts communautaires */
+        .community-type {
+            grid-column: span 2;
+        }
+
+        .post-content {
+            padding: 0 15px;
+        }
+
+        .post-content p {
+            margin: 0 0 10px 0;
+        }
+
+        .post-content img {
+            width: 100%;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+
+        /* Style pour les sections */
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 40px 0 20px;
+            padding: 0 20px;
+        }
+
+        .section-title {
+            font-size: 1.5em;
+            color: #E5E5E5;
+            margin: 0;
+        }
+
+        .view-all {
+            color: #E50914;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .star-card .thumbnail {
+            aspect-ratio: 1/1;
+        }
+
+        .category-card .category-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 20px;
+            background: linear-gradient(transparent, rgba(0,0,0,0.9));
+            color: white;
+        }
+
+        /* Animations de chargement */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes scaleIn {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        /* Animation du header */
+        .top-nav {
+            animation: slideInLeft 0.6s ease-out forwards;
+        }
+
+        /* Animation de la sidebar */
+        .sidebar {
+            animation: slideInLeft 0.8s ease-out forwards;
+        }
+
+        /* Animation des sections */
+        .section-header {
+            opacity: 0;
+            animation: fadeInUp 0.6s ease-out forwards;
+        }
+
+        /* Animation des cartes */
+        .content-card {
+            opacity: 0;
+            animation: scaleIn 0.5s ease-out forwards;
+        }
+
+        /* Animation décalée pour chaque carte */
+        .content-grid .content-card:nth-child(1) { animation-delay: 0.2s; }
+        .content-grid .content-card:nth-child(2) { animation-delay: 0.3s; }
+        .content-grid .content-card:nth-child(3) { animation-delay: 0.4s; }
+        .content-grid .content-card:nth-child(4) { animation-delay: 0.5s; }
+
+        /* Animation du menu */
+        .horizontal-menu a {
+            opacity: 0;
+            animation: fadeInUp 0.4s ease-out forwards;
+        }
+
+        .horizontal-menu a:nth-child(1) { animation-delay: 0.1s; }
+        .horizontal-menu a:nth-child(2) { animation-delay: 0.2s; }
+        .horizontal-menu a:nth-child(3) { animation-delay: 0.3s; }
+        .horizontal-menu a:nth-child(4) { animation-delay: 0.4s; }
+        .horizontal-menu a:nth-child(5) { animation-delay: 0.5s; }
+        .horizontal-menu a:nth-child(6) { animation-delay: 0.6s; }
+
+        /* Animation de la barre de recherche */
+        .search-container {
+            opacity: 0;
+            animation: fadeInUp 0.6s ease-out 0.3s forwards;
+        }
+
+        /* Animation des icônes de droite */
+        .right-icons a {
+            opacity: 0;
+            animation: fadeInUp 0.4s ease-out forwards;
+        }
+
+        .right-icons a:nth-child(1) { animation-delay: 0.4s; }
+        .right-icons a:nth-child(2) { animation-delay: 0.5s; }
+
+        /* Animation du logo */
+        .site-logo {
+            opacity: 0;
+            animation: slideInLeft 0.6s ease-out 0.1s forwards;
+        }
+
+        /* Animation des sections avec délai */
+        .section-header:nth-of-type(1) { animation-delay: 0.3s; }
+        .section-header:nth-of-type(2) { animation-delay: 0.4s; }
+        .section-header:nth-of-type(3) { animation-delay: 0.5s; }
+        .section-header:nth-of-type(4) { animation-delay: 0.6s; }
+
+        /* Animation du footer */
+        footer {
+            opacity: 0;
+            animation: fadeInUp 0.6s ease-out 1s forwards;
+        }
+    </style>
+</head>
+<body>
+    <div class="age-verification" id="ageVerification">
+        <h2>⚠️ Avertissement - Contenu Adulte</h2>
+        <p>Ce site contient du contenu réservé aux adultes de plus de 18 ans.</p>
+        <p>En continuant, vous certifiez avoir l'âge légal requis.</p>
+        <div>
+            <button onclick="verifyAge()">J'ai plus de 18 ans</button>
+            <button class="exit" onclick="window.location.href='https://www.google.com'">Quitter</button>
+        </div>
+    </div>
+
+    <aside class="sidebar" id="sidebar">
+        <a href="1.html" class="logo">StreamX</a>
+        <div class="nav-links">
+            <a href="1.html" class="active">
+                <svg class="nav-icon" viewBox="0 0 24 24">
+                    <path d="M10,20V14H14V20H19V12H22L12,3L2,12H5V20H10Z" />
+                </svg>
+                <span>Accueil</span>
+            </a>
+            <a href="categories.html">
+                <svg class="nav-icon" viewBox="0 0 24 24">
+                    <path d="M4,6H20V16H4M20,18A2,2 0 0,0 22,16V6C22,4.89 21.1,4 20,4H4C2.89,4 2,4.89 2,6V16A2,2 0 0,0 4,18H0V20H24V18H20Z" />
+                </svg>
+                <span>Catégories</span>
+            </a>
+            <a href="videos.html">
+                <svg class="nav-icon" viewBox="0 0 24 24">
+                    <path d="M17,10.5V7A1,1 0 0,0 16,6H4A1,1 0 0,0 3,7V17A1,1 0 0,0 4,18H16A1,1 0 0,0 17,17V13.5L21,17.5V6.5L17,10.5Z" />
+                </svg>
+                <span>Vidéos</span>
+            </a>
+            <a href="pornstars.html">
+                <svg class="nav-icon" viewBox="0 0 24 24">
+                    <path d="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z" />
+                </svg>
+                <span>Pornstars</span>
+            </a>
+            <a href="photos.html">
+                <svg class="nav-icon" viewBox="0 0 24 24">
+                    <path d="M4,4H7L9,2H15L17,4H20A2,2 0 0,1 22,6V18A2,2 0 0,1 20,20H4A2,2 0 0,1 2,18V6A2,2 0 0,1 4,4M12,7A5,5 0 0,0 7,12A5,5 0 0,0 12,17A5,5 0 0,0 17,12A5,5 0 0,0 12,7M12,9A3,3 0 0,1 15,12A3,3 0 0,1 12,15A3,3 0 0,1 9,12A3,3 0 0,1 12,9Z" />
+                </svg>
+                <span>Photos</span>
+            </a>
+        </div>
+    </aside>
+
+    <nav class="top-nav">
+        <div class="top-bar">
+            <a href="1.html" class="site-logo">
+                <svg viewBox="0 0 24 24">
+                    <path d="M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22A10,10 0 0,1 2,12A10,10 0 0,1 12,2M12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20A8,8 0 0,0 20,12A8,8 0 0,0 12,4M12,6A6,6 0 0,1 18,12A6,6 0 0,1 12,18A6,6 0 0,1 6,12A6,6 0 0,1 12,6M12,8A4,4 0 0,0 8,12A4,4 0 0,0 12,16A4,4 0 0,0 16,12A4,4 0 0,0 12,8Z"/>
+                </svg>
+                StreamX
+            </a>
+            <div class="search-container">
+                <input type="text" placeholder="Rechercher des vidéos...">
+                <svg viewBox="0 0 24 24">
+                    <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16,11.11 16,9.5 16,5.91 13.09,3 9.5,3S3,5.91 3,9.5 5.91,16 9.5,16c1.61,0 3.09-.59 4.23-1.57l.27.28v.79l5,4.99L20.49,19l-4.99-5zm-6,0C7.01,14 5,11.99 5,9.5S7.01,5 9.5,5 14,7.01 14,9.5 11.99,14 9.5,14z"/>
+                </svg>
+            </div>
+            <div class="right-icons">
+                <a href="upload.html">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z"/>
+                    </svg>
+                    Upload
+                </a>
+                <a href="account.html">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z"/>
+                    </svg>
+                    Compte
+                </a>
+            </div>
+        </div>
+        <div class="horizontal-menu">
+            <a href="1.html" class="active">ACCUEIL</a>
+            <a href="videos.html">VIDÉOS</a>
+            <a href="categories.html">CATÉGORIES</a>
+            <a href="pornstars.html">PORNSTARS</a>
+            <a href="communaute.html">COMMUNAUTÉ</a>
+            <a href="photos.html">PHOTOS & GIF</a>
+        </div>
+    </nav>
+
+    <main id="mainContent">
+        <!-- Section Vidéos Tendances -->
+        <div class="section-header">
+            <h2 class="section-title">Vidéos Tendances</h2>
+            <a href="videos.html" class="view-all">Voir tout</a>
+        </div>
+        <div class="content-grid">
+            <!-- 4 cartes vidéo les plus populaires -->
+            <div class="content-card">
+                <div class="thumbnail">
+                    <img src="azert.jpg" alt="Vidéo">
+                    <span class="badge duration">18:45</span>
+                    <span class="badge quality">4K</span>
+                </div>
+                <div class="content-info">
+                    <h3>Soirée torride à Paris</h3>
+                    <div class="meta-info">
+                        <span>Julia Rose</span>
+                        <span>Il y a 2h</span>
+                    </div>
+                    <div class="stats">
+                        <span>42.3k vues</span>
+                        <span>97%</span>
+                    </div>
+                </div>
+            </div>
+            <div class="content-card">
+                <div class="thumbnail">
+                    <img src="azert.jpg" alt="Vidéo">
+                    <span class="badge duration">22:30</span>
+                    <span class="badge quality">HD</span>
+                </div>
+                <div class="content-info">
+                    <h3>Massage sensuel à Nice</h3>
+                    <div class="meta-info">
+                        <span>Sophie Martin</span>
+                        <span>Il y a 4h</span>
+                    </div>
+                    <div class="stats">
+                        <span>38.1k vues</span>
+                        <span>95%</span>
+                    </div>
+                </div>
+            </div>
+            <div class="content-card">
+                <div class="thumbnail">
+                    <img src="azert.jpg" alt="Vidéo">
+                    <span class="badge duration">15:45</span>
+                    <span class="badge quality">4K</span>
+                </div>
+                <div class="content-info">
+                    <h3>Rencontre nocturne</h3>
+                    <div class="meta-info">
+                        <span>Luna Star</span>
+                        <span>Il y a 6h</span>
+                    </div>
+                    <div class="stats">
+                        <span>52.7k vues</span>
+                        <span>98%</span>
+                    </div>
+                </div>
+            </div>
+            <div class="content-card">
+                <div class="thumbnail">
+                    <img src="azert.jpg" alt="Vidéo">
+                    <span class="badge duration">31:20</span>
+                    <span class="badge quality">HD</span>
+                </div>
+                <div class="content-info">
+                    <h3>Soirée privée exclusive</h3>
+                    <div class="meta-info">
+                        <span>Emma Wild</span>
+                        <span>Il y a 8h</span>
+                    </div>
+                    <div class="stats">
+                        <span>45.9k vues</span>
+                        <span>96%</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section Pornstars Populaires -->
+        <div class="section-header">
+            <h2 class="section-title">Pornstars Populaires</h2>
+            <a href="pornstars.html" class="view-all">Voir tout</a>
+        </div>
+        <div class="content-grid">
+            <!-- 4 cartes pornstar -->
+            <div class="content-card star-card">
+                <div class="thumbnail">
+                    <img src="azert.jpg" alt="Star">
+                </div>
+                <div class="content-info">
+                    <h3>Eva Adams</h3>
+                    <div class="meta-info">
+                        <span>#1 Trending</span>
+                        <span>234 vidéos</span>
+                    </div>
+                </div>
+            </div>
+            <div class="content-card star-card">
+                <div class="thumbnail">
+                    <img src="azert.jpg" alt="Star">
+                </div>
+                <div class="content-info">
+                    <h3>Sofia Rose</h3>
+                    <div class="meta-info">
+                        <span>#2 Trending</span>
+                        <span>189 vidéos</span>
+                    </div>
+                </div>
+            </div>
+            <div class="content-card star-card">
+                <div class="thumbnail">
+                    <img src="azert.jpg" alt="Star">
+                </div>
+                <div class="content-info">
+                    <h3>Luna Love</h3>
+                    <div class="meta-info">
+                        <span>#3 Trending</span>
+                        <span>167 vidéos</span>
+                    </div>
+                </div>
+            </div>
+            <div class="content-card star-card">
+                <div class="thumbnail">
+                    <img src="azert.jpg" alt="Star">
+                </div>
+                <div class="content-info">
+                    <h3>Julia Star</h3>
+                    <div class="meta-info">
+                        <span>#4 Trending</span>
+                        <span>145 vidéos</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section Photos Récentes -->
+        <div class="section-header">
+            <h2 class="section-title">Photos Récentes</h2>
+            <a href="photos.html" class="view-all">Voir tout</a>
+        </div>
+        <div class="content-grid">
+            <!-- 4 cartes photo -->
+            <div class="content-card photo-card">
+                <div class="thumbnail">
+                    <img src="azert.jpg" alt="Photo">
+                </div>
+                <div class="content-info">
+                    <h3>Séance lingerie</h3>
+                    <div class="meta-info">
+                        <span>Sarah Love</span>
+                        <span>7.8k vues</span>
+                    </div>
+                </div>
+            </div>
+            <div class="content-card photo-card">
+                <div class="thumbnail">
+                    <img src="azert.jpg" alt="Photo">
+                </div>
+                <div class="content-info">
+                    <h3>Studio privé</h3>
+                    <div class="meta-info">
+                        <span>Lisa Pearl</span>
+                        <span>6.4k vues</span>
+                    </div>
+                </div>
+            </div>
+            <div class="content-card photo-card">
+                <div class="thumbnail">
+                    <img src="azert.jpg" alt="Photo">
+                </div>
+                <div class="content-info">
+                    <h3>Collection été</h3>
+                    <div class="meta-info">
+                        <span>Eva Sweet</span>
+                        <span>9.1k vues</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section Catégories Populaires -->
+        <div class="section-header">
+            <h2 class="section-title">Catégories Populaires</h2>
+            <a href="categories.html" class="view-all">Voir tout</a>
+        </div>
+        <div class="content-grid">
+            <!-- 4 cartes catégorie -->
+            <div class="content-card category-card">
+                <div class="thumbnail">
+                    <img src="azert.jpg" alt="Catégorie">
+                    <div class="category-overlay">
+                        <h3>Amateur</h3>
+                        <span>1.2K vidéos</span>
+                    </div>
+                </div>
+            </div>
+            <div class="content-card category-card">
+                <div class="thumbnail">
+                    <img src="azert.jpg" alt="Catégorie">
+                    <div class="category-overlay">
+                        <h3>Lingerie</h3>
+                        <span>856 vidéos</span>
+                    </div>
+                </div>
+            </div>
+            <div class="content-card category-card">
+                <div class="thumbnail">
+                    <img src="azert.jpg" alt="Catégorie">
+                    <div class="category-overlay">
+                        <h3>Massage</h3>
+                        <span>634 vidéos</span>
+                    </div>
+                </div>
+            </div>
+            <div class="content-card category-card">
+                <div class="thumbnail">
+                    <img src="azert.jpg" alt="Catégorie">
+                    <div class="category-overlay">
+                        <h3>Blonde</h3>
+                        <span>945 vidéos</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>© 2025 StreamX - Accès réservé aux adultes - Tous droits réservés</p>
+    </footer>
+
+    <script>
+        // Vérification de l'âge
+        function verifyAge() {
+            localStorage.setItem('ageVerified', 'true');
+            document.getElementById('ageVerification').style.display = 'none';
+        }
+
+        // Vérifier si l'utilisateur a déjà confirmé son âge
+        window.addEventListener('DOMContentLoaded', () => {
+            const ageVerified = localStorage.getItem('ageVerified');
+            if (ageVerified) {
+                document.getElementById('ageVerification').style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>
